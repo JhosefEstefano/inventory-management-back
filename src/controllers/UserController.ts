@@ -7,13 +7,23 @@ import User from '../models/User';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { name, password } = req.body;
+    const { name, email, password } = req.body;
+
+    const userExist = await User.findOne({ email });
+
+    if (userExist) {
+      return res.status(500).json({ msg: 'Email ya registrado' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
-    const user = new User({ name, password: hashedPassword });
-    await user.save();
-    res.status(200);
+    const user = new User({ name, email, password: hashedPassword });
+    user.save().then(
+      (ress) => {
+        return res.status(200).send({ msg: "Usuario Creado" });
+      }
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create user' });
+    return res.status(500).json({ error: 'Failed to create user' });
   }
 };
 
@@ -50,10 +60,10 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if the user exists in the database
-    const user = await User.findOne({ name });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }

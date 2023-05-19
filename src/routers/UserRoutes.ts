@@ -4,6 +4,7 @@ import { body } from 'express-validator';
 import { createUser, getUserById, loginUser } from '../controllers/UserController';
 import { createUserValidationRules } from '../middlewares/userValidators';
 import { validationResult } from 'express-validator';
+import { verifyToken } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -19,13 +20,13 @@ router.post('/', createUserValidationRules, (req: Request, res: Response) => {
 router.post(
     '/login',
     [
-      body('name').notEmpty().withMessage('Name is required'),
+      body('email').notEmpty().isEmail().withMessage('Email is required'),
       body('password').notEmpty().withMessage('Password is required'),
     ],
     loginUser
   );
 
-router.get('/:id', getUserById);
+router.get('/:id', [verifyToken], getUserById);
 
 
 export default router;
