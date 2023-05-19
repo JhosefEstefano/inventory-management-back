@@ -1,7 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { createUser, getUserById, loginUser } from '../controllers/UserController';
+import { createUser, getUserById, getUsers, loginUser } from '../controllers/UserController';
 import { createUserValidationRules } from '../middlewares/userValidators';
 import { validationResult } from 'express-validator';
 import { verifyToken } from '../middlewares/authMiddleware';
@@ -27,6 +27,8 @@ router.post(
   );
 
 router.get('/:id', [verifyToken], getUserById);
+router.get('', [verifyToken], getUsers);
+
 
 
 export default router;

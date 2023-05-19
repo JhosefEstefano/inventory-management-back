@@ -29,7 +29,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create user' });
@@ -45,7 +45,9 @@ export const getUserById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    res.json(user);
+    const { _id, name, email, status } = user;
+
+    res.json({ _id, name, email, status });
   } catch (error) {
     res.status(500).json({ error: 'Failed to get user' });
   }
