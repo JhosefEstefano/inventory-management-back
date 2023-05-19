@@ -1,8 +1,31 @@
 import express from 'express';
-import { createUser } from '../controllers/UserController';
+import { Request, Response } from 'express';
+import { body } from 'express-validator';
+import { createUser, getUserById, loginUser } from '../controllers/UserController';
+import { createUserValidationRules } from '../middlewares/userValidators';
+import { validationResult } from 'express-validator';
 
 const router = express.Router();
 
-router.post('/', createUser);
+router.post('/', createUserValidationRules, (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    createUser(req, res);
+});
+
+router.post(
+    '/login',
+    [
+      body('name').notEmpty().withMessage('Name is required'),
+      body('password').notEmpty().withMessage('Password is required'),
+    ],
+    loginUser
+  );
+
+router.get('/:id', getUserById);
+
 
 export default router;

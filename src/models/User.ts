@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 interface IUser extends Document {
   name: string;
+  email: string;
   password: string;
   createdAt: Date;
   status: string;
@@ -9,9 +10,10 @@ interface IUser extends Document {
 
 const userSchema: Schema = new Schema({
   name: { type: String, required: true },
+  email: { type: String, require: true },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  status: { type: String, required: true },
+  status: { type: String, default: true },
 });
 
 const User = mongoose.model<IUser>('User', userSchema);
