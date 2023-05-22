@@ -4,6 +4,8 @@ import cors from 'cors';
 import connectDB from './db';
 
 import userRoutes from './routers/UserRoutes';
+import brandRoutes from './routers/BrandRoutes';
+
 
 const app = express();
 const port = 3000;
@@ -14,6 +16,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/users', userRoutes);
+app.use('/brand', brandRoutes);
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, World!');
