@@ -3,6 +3,9 @@ import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+require('dotenv').config()
+
+
 import User from '../models/User';
 
 export const createUser = async (req: Request, res: Response) => {
@@ -77,7 +80,7 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     // Generate a JWT token for authentication
-    const token = jwt.sign({ userId: user._id }, '502794613825//*-7yhs552as', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.secret_key!, { expiresIn: '12h' });
 
     res.json({ token });
   } catch (error) {
