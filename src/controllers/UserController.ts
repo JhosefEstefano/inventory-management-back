@@ -20,10 +20,12 @@ export const createUser = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
     const user = new User({ name, email, password: hashedPassword });
+
     user.save().then(
       (ress) => {
         return res.status(200).send({ msg: "Usuario Creado" });
       }
+
     );
   } catch (error) {
     return res.status(500).json({ error: 'Failed to create user' });
@@ -82,7 +84,8 @@ export const loginUser = async (req: Request, res: Response) => {
     // Generate a JWT token for authentication
     const token = jwt.sign({ userId: user._id }, process.env.secret_key!, { expiresIn: '12h' });
 
-    res.json({ token: token, userId: user._id, name: user.name, email: user.email });
+    res.json({ token: token, name: user.name, email: user.email });
+    
   } catch (error) {
     res.status(500).json({ error: 'Failed to login' });
   }
